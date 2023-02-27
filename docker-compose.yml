@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  backend:
+    container_name: area-backend
+    env_file: api.env
+    working_dir: /app
+    build: ./backend
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend/src/:/app/src
+      - backmodules:/app/node_modules
+    command: [ "npm", "run", "nodemon" ]
+
+  frontend:
+    container_name: area-frontend
+    env_file: api.env
+    working_dir: /app
+    build: 
+      context: ./frontend
+      target: node
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src/:/app/src
+      - frontmodules:/app/node_modules
+    command: [ "npm", "run", "start" ]
+
+
+  mongodb:
+    container_name: area-database
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    env_file: api.env
+    volumes:
+      - mongodb:/data/db
+      - mongodb:/data/configdb
+
+volumes:
+  mongodb:
+  backmodules:
+  frontmodules:
